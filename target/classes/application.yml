@@ -1,0 +1,74 @@
+server:
+  port: 8088
+
+---
+
+spring:
+  profiles: default
+  cloud:
+    gateway:
+      routes:
+        - id: pizzaorder
+          uri: http://localhost:8081
+          predicates:
+            - Path=/pizzaorders/**
+        - id: pizzadelivery
+          uri: http://localhost:8082
+          predicates:
+            - Path=/pizzadeliveries/**, /cancellations/**
+        - id: pizzapayment
+          uri: http://localhost:8083
+          predicates:
+            - Path=/pizzapayments/**, /paymentscreations/**
+        - id: pizzamypage
+          uri: http://localhost:8084
+          predicates:
+            - Path= /pizzamypages/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+
+---
+
+spring:
+  profiles: docker
+  cloud:
+    gateway:
+      routes:
+        - id: pizzaorder
+          uri: http://pizzaorder:8080
+          predicates:
+            - Path=/pizzaorders/**
+        - id: pizzadelivery
+          uri: http://pizzadelivery:8080
+          predicates:
+            - Path=/pizzadeliveries/**, /cancellations/**
+        - id: pizzapayment
+          uri: http://pizzapayment:8080
+          predicates:
+            - Path=/pizzapayments/** 
+        - id: pizzamypage
+          uri: http://pizzamypage:8080
+          predicates:
+            - Path= /pizzamypages/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins:
+              - "*"
+            allowedMethods:
+              - "*"
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+server:
+  port: 8080
